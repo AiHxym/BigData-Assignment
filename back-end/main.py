@@ -74,7 +74,6 @@ def get_users():
 def get_films():
     req_data = json.loads(request.get_data(as_text=True))
     res = {}
-    print(req_data)
     for user in req_data:
         for film in model.recommendProducts(int(user), 20):
             if(film.product in res):
@@ -83,6 +82,9 @@ def get_films():
                 res[film.product] = film.rating
     return json.dumps(res)
 
+@app.route('/api/get_film_title', methods=['POST'])
+def get_film_title():
+    return json.dumps(movieTitle)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

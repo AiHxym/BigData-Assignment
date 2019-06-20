@@ -18,6 +18,14 @@
       <p slot="title">
         <Icon type="ios-film-outline"/>Film Recommendation
       </p>
+      <tr v-for="films in recommandFilms" style="display:flex;text-align:center">
+        <Card v-for="film in films" style="width:auto">
+          <div style="text-align:center">
+            <img src="@/assets/movie.jpg">
+            <h3>{{filmDic[film.key.toString()+".0"]}}</h3>
+          </div>
+        </Card>
+      </tr>
     </Card>
   </div>
 </template>
@@ -32,12 +40,15 @@ export default {
   data() {
     return {
       users: [],
-      selectedUsers: []
+      selectedUsers: [],
+      recommandFilms: [],
+      filmDic: {}
     };
   },
   watch: {
     selectedUsers() {
       this.getFilms();
+      this.getFilmDic();
     }
   },
   created() {
@@ -74,26 +85,35 @@ export default {
       axios
         .post(path, req)
         .then(response => {
-          console.log(response.data);
           let arr = [];
           Object.keys(response.data).forEach(function(key) {
-            arr.push({key: key, value: response.data[key]});
+            arr.push({ key: key, value: response.data[key] });
           });
-          arr.sort((a,b)=>{
-              return b.value - a.value
+          arr.sort((a, b) => {
+            return b.value - a.value;
           });
-          
-          /*this.users = response.data.slice();
-          let len = this.users.length;
-          let n = 6; //假设每行显示4个
+          let len = arr.length;
+          let n = 4; //假设每行显示4个
           let lineNum = len % n === 0 ? len / n : Math.floor(len / n + 1);
           let res = [];
           for (let i = 0; i < lineNum; i++) {
             // slice() 方法返回一个从开始到结束（不包括结束）选择的数组的一部分浅拷贝到一个新数组对象。且原始数组不会被修改。
-            let temp = this.users.slice(i * n, i * n + n);
+            let temp = arr.slice(i * n, i * n + n);
             res.push(temp);
           }
-          this.users = res;*/
+          this.recommandFilms = res;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    getFilmDic() {
+      const path = "/api/get_film_title";
+      let req = [];
+      axios
+        .post(path, req)
+        .then(response => {
+          this.filmDic = response.data;
         })
         .catch(error => {
           console.log(error);

@@ -58,7 +58,7 @@
             <Icon type="ios-navigate"></Icon>
             <span>Option 1</span>
           </MenuItem>
-          <MenuItem name="1-2">
+          <MenuItem name="1-2" to="/wordle">
             <Icon type="ios-search"></Icon>
             <span>Option 2</span>
           </MenuItem>
